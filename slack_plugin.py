@@ -5,7 +5,7 @@ slacktoken = None
 slackchannel = None
 botname = None
 
-def config(conf):
+def slack_config(conf):
     global slacktoken, slackchannel, botname
 
     for node in conf.children:
@@ -21,7 +21,7 @@ def config(conf):
             collectd.warning('Slack Plugin: Unknown config key: {0}'.format(key))
             continue
 
-def send_slack(message):
+def send_to_slack(message):
     sc = SlackClient(slacktoken)
     sc.api_call("chat.postMessage", channel=slackchannel, text=message,username=botname, icon_emoji=':robot_face:')
 
@@ -36,10 +36,10 @@ def slack_notification(notification, data=None):
         severity = 'OKAY'
     else:
         severity = 'UNKNOWN'
-    send_slack(message)
+    send_to_slack(message)
     collectd.info("Notification is sent to slack... Severity =  {0}, Message = {1}".format(severity,message))
 
-collectd.register_config(config)
+collectd.register_config(slack_config)
 collectd.register_notification(slack_notification)
 
 

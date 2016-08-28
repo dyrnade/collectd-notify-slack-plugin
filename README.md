@@ -23,7 +23,7 @@ Then you can configure slack plugin like
 
 ```
 <Plugin python>
-	ModulePath "/home/cemg/projects/slack-plugin"
+	ModulePath "/home/cemg/projects/slack_plugin"
 	Import "slack_plugin"
 
         <Module slack_plugin>
