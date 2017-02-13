@@ -1,9 +1,13 @@
 import collectd
+import signal
 from slackclient import SlackClient
 
 slacktoken = None
 slackchannel = None
 botname = None
+
+def slack_init():
+    signal.signal(signal.SIGCHLD, signal.SIG_DFL)
 
 def slack_config(conf):
     global slacktoken, slackchannel, botname
@@ -23,7 +27,7 @@ def slack_config(conf):
 
 def send_to_slack(message):
     sc = SlackClient(slacktoken)
-    sc.api_call("chat.postMessage", channel=slackchannel, text=message,username=botname, icon_emoji=':robot_face:')
+    sc.api_call("chat.postMessage", channel=slackchannel, text=message, username=botname, icon_emoji=':robot_face:')
 
 
 def slack_notification(notification, data=None):
@@ -39,6 +43,7 @@ def slack_notification(notification, data=None):
     send_to_slack(message)
     collectd.info("Notification is sent to slack... Severity =  {0}, Message = {1}".format(severity,message))
 
+collectd.register_init(slack_init)
 collectd.register_config(slack_config)
 collectd.register_notification(slack_notification)
 
